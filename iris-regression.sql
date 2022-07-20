@@ -30,22 +30,42 @@ create table varieties ( id integer primary key, name varchar(25) );
 insert into varieties(name) select distinct species from irises;
 alter table irises add column variety_id int;
 update irises set variety_id = 1 where species = 'virginica';
-update irises set variety_id = ( select id from varieties where varieties.name = irises.species );
-create table tmp_irises as select sepal_length, sepal_width, petal_length, petal_width, variety_id from irises;
+update irises set variety_id =
+  ( select id from varieties where varieties.name = irises.species );
+create table tmp_irises as
+  select sepal_length, sepal_width, petal_length, petal_width, variety_id from irises;
 drop table irises;
-create table irises as select sepal_length, sepal_width, petal_length, petal_width, variety_id from tmp_irises;
-select name, count(id) from varieties inner join irises on irises.variety_id = varieties.id where petal_length <= 5.0 group by name;
+create table irises as
+  select sepal_length, sepal_width, petal_length, petal_width, variety_id from tmp_irises;
+select name, count(id) from varieties inner join irises on
+  irises.variety_id = varieties.id where petal_length <= 5.0 group by name;
 
 select "Duplicates";
-select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid and a.petal_length = b.petal_length;
-select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid and a.petal_length = b.petal_length and a.petal_width = b.petal_width;
-select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid and a.petal_length = b.petal_length and a.petal_width = b.petal_width and a.sepal_length = b.sepal_length and a.sepal_width = b.sepal_width;
-select petal_width, petal_length, count ( petal_width ) from irises group by petal_length, petal_length order by count ( petal_width ) desc limit 1;
+select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid
+  and a.petal_length = b.petal_length;
+select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid
+  and a.petal_length = b.petal_length and a.petal_width = b.petal_width;
+select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid
+  and a.petal_length = b.petal_length and a.petal_width = b.petal_width
+  and a.sepal_length = b.sepal_length and a.sepal_width = b.sepal_width;
+select petal_width, petal_length, count ( petal_width ) from irises
+  group by petal_length, petal_length order by count ( petal_width ) desc limit 1;
 
 select "Linear_regression";
-select (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*))) / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*))) from irises;
-select (sum(petal_width) / count(*)) - (sum(petal_length) / count(*)) * (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*))) / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*))) from irises;
-select (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*))) / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*))) * 7.5 + (sum(petal_width) / count(*)) - (sum(petal_length) / count(*)) * (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*))) / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*))) from irises;
+select (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*)))
+  / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*)))
+  from irises;
+select (sum(petal_width) / count(*)) - (sum(petal_length) / count(*))
+  * (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*)))
+  / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*)))
+  from irises;
+select (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*)))
+  / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*)))
+  * 7.5
+  + (sum(petal_width) / count(*)) - (sum(petal_length) / count(*))
+  * (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*)))
+  / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*)))
+  from irises;
 select 0.416416 * 7.5 - 0.366514;
 
 select "All_done";
