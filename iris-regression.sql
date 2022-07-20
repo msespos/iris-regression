@@ -36,4 +36,10 @@ drop table irises;
 create table irises as select sepal_length, sepal_width, petal_length, petal_width, variety_id from tmp_irises;
 select name, count(id) from varieties inner join irises on irises.variety_id = varieties.id where petal_length <= 5.0 group by name;
 
+select "Duplicates";
+select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid and a.petal_length = b.petal_length;
+select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid and a.petal_length = b.petal_length and a.petal_width = b.petal_width;
+select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid and a.petal_length = b.petal_length and a.petal_width = b.petal_width and a.sepal_length = b.sepal_length and a.sepal_width = b.sepal_width;
+select petal_width, petal_length, count ( petal_width ) from irises group by petal_length, petal_length order by count ( petal_width ) desc limit 1;
+
 select "All_done";
