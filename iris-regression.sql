@@ -13,7 +13,7 @@ create table irises (
 .mode csv
 .import -skip 1 iris.csv irises
 
-select "basic_statistics:";
+select "Basic_statistics:";
 select count(*) from irises;
 select max(petal_length) from irises;
 select min(petal_length) from irises;
@@ -24,4 +24,16 @@ select * from irises where petal_length in (select max(petal_length) from irises
 select * from irises order by petal_length * petal_width desc limit 10;
 select species, count(*) from irises group by species;
 
-select "all_done";
+select "Normalization:";
+select species from irises group by species;
+create table varieties ( id integer primary key, name varchar(25) );
+insert into varieties(name) select species from irises;
+alter table irises add column variety_id int;
+update irises set variety_id = 1 where species = 'virginica';
+update irises set variety_id = ( select id from varieties where varieties.name = irises.species );
+create table tmp_irises as select sepal_length, sepal_width, petal_length, petal_width, variety_id from irises;
+drop table irises;
+create table irises as select sepal_length, sepal_width, petal_length, petal_width, variety_id from tmp_irises;
+select name, count(id) from varieties inner join irises on irises.variety_id = varieties.id where petal_length <= 5.0 group by name;
+
+select "All_done";
