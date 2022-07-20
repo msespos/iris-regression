@@ -42,4 +42,10 @@ select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid !
 select count ( distinct a.rowid ) from irises a inner join irises b on a.rowid != b.rowid and a.petal_length = b.petal_length and a.petal_width = b.petal_width and a.sepal_length = b.sepal_length and a.sepal_width = b.sepal_width;
 select petal_width, petal_length, count ( petal_width ) from irises group by petal_length, petal_length order by count ( petal_width ) desc limit 1;
 
+select "Linear_regression";
+select (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*))) / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*))) from irises;
+select (sum(petal_width) / count(*)) - (sum(petal_length) / count(*)) * (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*))) / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*))) from irises;
+select (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*))) / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*))) * 7.5 + (sum(petal_width) / count(*)) - (sum(petal_length) / count(*)) * (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*))) / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*))) from irises;
+select 0.416416 * 7.5 - 0.366514;
+
 select "All_done";
