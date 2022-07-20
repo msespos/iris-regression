@@ -27,7 +27,7 @@ select species, count(*) from irises group by species;
 select "Normalization:";
 select species from irises group by species;
 create table varieties ( id integer primary key, name varchar(25) );
-insert into varieties(name) select species from irises;
+insert into varieties(name) select distinct species from irises;
 alter table irises add column variety_id int;
 update irises set variety_id = 1 where species = 'virginica';
 update irises set variety_id = ( select id from varieties where varieties.name = irises.species );
