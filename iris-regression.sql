@@ -52,20 +52,10 @@ select petal_width, petal_length, count ( petal_width ) from irises
   group by petal_length, petal_length order by count ( petal_width ) desc limit 1;
 
 select "Linear_regression";
-select (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*)))
-  / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*)))
-  from irises;
-select (sum(petal_width) / count(*)) - (sum(petal_length) / count(*))
-  * (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*)))
-  / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*)))
-  from irises;
-select (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*)))
-  / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*)))
-  * 7.5
-  + (sum(petal_width) / count(*)) - (sum(petal_length) / count(*))
-  * (sum(petal_length * petal_width) - (sum(petal_length) * sum(petal_width) / count(*)))
-  / (sum(petal_length * petal_length) - (sum(petal_length) * sum(petal_length) / count(*)))
-  from irises;
-select 0.416416 * 7.5 - 0.366514;
+with m as (select (sum(petal_length * petal_width) - sum(petal_width) * avg(petal_length))
+  / (sum(petal_length * petal_length) - sum(petal_length) * avg(petal_length))
+  as value from irises)
+select m.value, avg(petal_width) - avg(petal_length) * m.value from irises, m;
+select 0.416419 * 7.5 - 0.366514;
 
 select "All_done";
